@@ -1,5 +1,6 @@
 # vsk README
-VSK implements a set of simple featues and a keymap to facilitate more rapid text editing.
+VSK is a Visual Studio plugin that implements a set of simple featues and a 
+keymap to facilitate more rapid text editing.
 
 In traditional keymaps, functions have sometimes been assigned to a key that
 might be easy to remember.  For example, Ctrl-F might be used for "find."
