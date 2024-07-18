@@ -3,6 +3,8 @@
   "displayName": "vsk",
   "description": "VSCode K Commands",
   "version": "0.0.1",
+  "author": "Kyle Bateman",
+  "license": "MIT",
   "engines": {
     "vscode": "^1.89.0"
   },
@@ -175,6 +177,6 @@
   },
   "repository": {
     "type": "git",
-    "url","https://github.com/gotchoices/vsk.git"
+    "url": "https://github.com/gotchoices/vsk.git"
   }
 }
