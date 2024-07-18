@@ -1,0 +1,7 @@
+TODO:
+
+- How to handle Ctrl-Y, Ctrl-T
+- Test searching/replacing
+- Test file opening, saving, save-as
+- Review keymap for any missing commands
+- 

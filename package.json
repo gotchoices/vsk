@@ -1,0 +1,180 @@
+{
+  "name": "vsk",
+  "displayName": "vsk",
+  "description": "VSCode K Commands",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.89.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "main": "./out/extension.js",
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "vscode-test"
+  },
+  "activationEvents": [
+    "onCommand:extension.deleteLeftToBuf",
+    "onCommand:extension.deleteRightToBuf",
+    "onCommand:extension.deleteLineToBuf",
+    "onCommand:extension.cursorLineStartPrev",
+    "onCommand:extension.cursorLineEndNext",
+    "onCommand:extension.cursorLeft",
+    "onCommand:extension.cursorRight",
+    "onCommand:extension.cursorUp",
+    "onCommand:extension.cursorDown",
+    "onCommand:extension.cursorWordStartLeft",
+    "onCommand:extension.cursorWordEndRight",
+    "onCommand:extension.cursorTop",
+    "onCommand:extension.cursorBottom",
+    "onCommand:extension.yankFromBuf",
+    "onCommand:extension.prefixZap"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "extension.deleteLeftToBuf",
+        "title": "Left delete to buffer"
+      },
+      {
+        "command": "extension.deleteRightToBuf",
+        "title": "Forward delete to buffer"
+      },
+      {
+        "command": "extension.deleteLineToBuf",
+        "title": "Line delete to buffer"
+      },
+      {
+        "command": "extension.yankFromBuf",
+        "title": "Buffer yank"
+      },
+      {
+        "command": "extension.cursorLineStartPrev",
+        "title": "End of line or next line"
+      },
+      {
+        "command": "extension.cursorLineEndNext",
+        "title": "Beginning of line or previous line"
+      },
+      {
+        "command": "extension.prefixZap",
+        "title": "Delete to next cursor motion target"
+      }
+    ],
+    "keybindings": [
+      {
+        "key": "ctrl+h",
+        "when": "textInputFocus",
+        "command": "extension.deleteLeftToBuf"
+      },
+      {
+        "key": "ctrl+g",
+        "when": "textInputFocus",
+        "command": "extension.deleteRightToBuf"
+      },
+      {
+        "key": "ctrl+e",
+        "when": "textInputFocus",
+        "command": "extension.deleteLineToBuf"
+      },
+      {
+        "key": "ctrl+u",
+        "when": "textInputFocus",
+        "command": "extension.cursorLineStartPrev"
+      },
+      {
+        "key": "ctrl+r",
+        "when": "textInputFocus",
+        "command": "extension.cursorLineEndNext"
+      },
+      {
+        "key": "ctrl+f",
+        "when": "textInputFocus",
+        "command": "extension.cursorRight"
+      },
+      {
+        "key": "ctrl+j",
+        "when": "textInputFocus",
+        "command": "extension.cursorLeft"
+      },
+      {
+        "key": "ctrl+k",
+        "when": "textInputFocus",
+        "command": "extension.cursorUp"
+      },
+      {
+        "key": "ctrl+d",
+        "when": "textInputFocus",
+        "command": "extension.cursorDown"
+      },
+      {
+        "key": "ctrl+n",
+        "when": "textInputFocus",
+        "command": "extension.cursorWordStartLeft"
+      },
+      {
+        "key": "ctrl+v",
+        "when": "textInputFocus",
+        "command": "extension.cursorWordEndRight"
+      },
+      {
+        "key": "ctrl+w",
+        "when": "textInputFocus",
+        "command": "extension.cursorBottom"
+      },
+      {
+        "key": "ctrl+o",
+        "when": "textInputFocus",
+        "command": "extension.cursorTop"
+      },
+      {
+        "key": "ctrl+y",
+        "when": "textInputFocus",
+        "command": "scrollPageUp"
+      },
+      {
+        "key": "ctrl+t",
+        "when": "textInputFocus",
+        "command": "scrollPageDown"
+      },
+      {
+        "key": "ctrl+b",
+        "when": "textInputFocus",
+        "command": "extension.yankFromBuf"
+      },
+      {
+        "key": "ctrl+l",
+        "when": "textInputFocus",
+        "command": "extension.prefixZap"
+      },
+      {
+        "key": "ctrl+i",
+        "when": "textInputFocus",
+        "command": "tab"
+      }
+    ]
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.6",
+    "@types/node": "18.x",
+    "@types/vscode": "^1.89.0",
+    "@typescript-eslint/eslint-plugin": "^7.7.1",
+    "@typescript-eslint/parser": "^7.7.1",
+    "@vscode/test-cli": "^0.0.9",
+    "@vscode/test-electron": "^2.3.9",
+    "eslint": "^8.57.0",
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "vsce": "^2.15.0"
+  },
+  "repository": {
+    "type": "git",
+    "url","https://github.com/gotchoices/vsk.git"
+  }
+}

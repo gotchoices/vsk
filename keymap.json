@@ -1,0 +1,31 @@
+// Place your key bindings in this file to override the defaults
+[
+    { "key": "ctrl+f",  "command": "cursorRight",   "when": "textInputFocus" },
+    { "key": "ctrl+j",  "command": "cursorLeft",    "when": "textInputFocus" },
+    { "key": "ctrl+h",  "command": "deleteLeft",    "when": "textInputFocus" },
+    { "key": "ctrl+g",  "command": "deleteRight",   "when": "textInputFocus" },
+    { "key": "ctrl+k",  "command": "cursorUp",      "when": "textInputFocus" },
+    { "key": "ctrl+d",  "command": "cursorDown",    "when": "textInputFocus" },
+    { "key": "ctrl+i",  "command": "tab",           "when": "textInputFocus" },
+    { "key": "ctrl+y",  "command": "scrollPageUp",  "when": "textInputFocus" },
+    { "key": "ctrl+t",  "command": "scrollPageDown",    "when": "textInputFocus" },
+    { "key": "ctrl+v",  "command": "cursorWordEndRight", "when": "textInputFocus" },
+    { "key": "ctrl+n",  "command": "cursorWordStartLeft",   "when": "textInputFocus" },
+    { "key": "ctrl+w",  "command": "cursorBottom",  "when": "textInputFocus" },
+    { "key": "ctrl+o",  "command": "cursorTop",     "when": "textInputFocus" },
+    { "key": "ctrl+e",  "command": "editor.action.deleteLines",    "when": "textInputFocus" },
+
+    { "key": "ctrl+u",  "command": "extension.multiCommand.execute",      "when": "textInputFocus",
+    "args": {"sequence": ["cursorLeft", "cursorLineStart"]}
+    },
+    { "key": "ctrl+r",  "command": "extension.multiCommand.execute", "when": "textInputFocus",
+    "args": {"sequence": ["cursorRight", "cursorLineEnd"]}
+
+    },
+
+]
+//TODO:
+//- Deletions go to yank buffer
+//- Bind yank to ctrl-b
+//- Zap to cursor motion
+
