@@ -2,7 +2,7 @@
   "name": "vsk",
   "displayName": "vsk",
   "description": "VSCode K Commands",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "author": "Kyle Bateman",
   "license": "MIT",
   "engines": {
@@ -16,6 +16,7 @@
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
+    "package": "vsce package",
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src --ext ts",
     "test": "vscode-test"
@@ -35,7 +36,18 @@
     "onCommand:extension.cursorTop",
     "onCommand:extension.cursorBottom",
     "onCommand:extension.yankFromBuf",
-    "onCommand:extension.prefixZap"
+    "onCommand:extension.prefixZap",
+    "onCommand:extension.saveClose",
+    "onCommand:workbench.action.splitEditorDown",
+    "onCommand:workbench.action.focusNextGroup",
+    "onCommand:workbench.action.focusPreviousGroup",
+    "onCommand:workbench.action.files.save",
+    "onCommand:workbench.action.files.saveAs",
+    "onCommand:workbench.action.files.openFile",
+    "onCommand:workbench.action.files.closeAsctiveEditor",
+    "onCommand:workbench.action.gotoLine",
+    "onCommand:actions.find",
+    "onCommand:editor.action.nextMatchFindAction"
   ],
   "contributes": {
     "commands": [
@@ -66,6 +78,10 @@
       {
         "command": "extension.prefixZap",
         "title": "Delete to next cursor motion target"
+      },
+      {
+        "command": "extension.saveClose",
+        "title": "Save file and close window"
       }
     ],
     "keybindings": [
@@ -158,8 +174,82 @@
         "key": "ctrl+i",
         "when": "textInputFocus",
         "command": "tab"
+      },
+      {
+        "key": "ctrl+p ctrl+l",
+        "when": "textInputFocus",
+        "command": "workbench.action.splitEditorDown"
+      },
+      {
+        "key": "ctrl+p ctrl+y",
+        "when": "textInputFocus",
+        "command": "workbench.action.focusPreviousGroup"
+      },
+      {
+        "key": "ctrl+p ctrl+t",
+        "when": "textInputFocus",
+        "command": "workbench.action.focusNextGroup"
+      },
+      {
+        "key": "ctrl+p ctrl+s",
+        "when": "textInputFocus",
+        "command": "workbench.action.files.save"
+      },
+      {
+        "key": "ctrl+p ctrl+a",
+        "when": "textInputFocus",
+        "command": "workbench.action.files.saveAs"
+      },
+      {
+        "key": "ctrl+p ctrl+o",
+        "when": "textInputFocus",
+        "command": "workbench.action.files.openFile"
+      },
+      {
+        "key": "ctrl+p ctrl+w",
+        "when": "textInputFocus",
+        "command": "workbench.action.closeActiveEditor"
+      },
+      {
+        "key": "ctrl+p ctrl+u",
+        "when": "textInputFocus",
+        "command": "extension.saveClose"
+      },
+      {
+        "key": "ctrl+p ctrl+g",
+        "when": "textInputFocus",
+        "command": "workbench.action.gotoLine"
+      },
+      {
+        "key": "ctrl+p ctrl+x",
+        "when": "textInputFocus && !findWidgetVisible",
+        "command": "actions.find"
+      },
+      {
+        "key": "ctrl+p ctrl+x",
+        "when": "findWidgetVisible",
+        "command": "closeFindWidget"
+      },
+      {
+        "key": "ctrl+x",
+        "when": "editorFocus && findWidgetVisible",
+        "command": "closeFindWidget"
+      },
+      {
+        "key": "ctrl+x",
+        "when": "editorFocus",
+        "command": "editor.action.nextMatchFindAction"
       }
-    ]
+    ],
+    "configuration": {
+      "properties": {
+        "editor.scrollBeyondLastLine": {
+          "type": "boolean",
+          "default": false,
+          "description": "Controls whether the editor will scroll beyond the last line."
+        }
+      }
+    }
   },
   "devDependencies": {
     "@types/mocha": "^10.0.6",

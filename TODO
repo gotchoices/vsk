@@ -1,7 +1,18 @@
 TODO:
 
+X- Moving must not clear yank buffer (else what's the point)
+X-  Ctrl-P, Ctrl-P: save file
+X-  Ctrl-P, Ctrl-U: save, close
+X-  Ctrl-P, Ctrl-L: workbench.action.splitEditorDown
+X-  Ctrl-P, Ctrl-Y: workbench.action.focusPreviousGroup
+X-  Ctrl-P, Ctrl-T: workbench.action.focusNextGroup
+X-  Ctrl-P, Ctrl-X: find (back-port to K)
+X- Test file opening, saving, save-as
+- Shift-Enter: New line
+- Can't backspace when in first position
 - How to handle Ctrl-Y, Ctrl-T
+- Ctrl-L, Ctrl-B: Undo
+- Implement Ctrl-P prefix key:
 - Test searching/replacing
-- Test file opening, saving, save-as
 - Review keymap for any missing commands
 - 
