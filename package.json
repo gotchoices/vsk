@@ -2,7 +2,7 @@
   "name": "vsk",
   "displayName": "vsk",
   "description": "VSCode K Commands",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": "Kyle Bateman",
   "license": "MIT",
   "engines": {
@@ -22,22 +22,18 @@
     "test": "vscode-test"
   },
   "activationEvents": [
-    "onCommand:extension.deleteLeftToBuf",
-    "onCommand:extension.deleteRightToBuf",
-    "onCommand:extension.deleteLineToBuf",
-    "onCommand:extension.cursorLineStartPrev",
-    "onCommand:extension.cursorLineEndNext",
-    "onCommand:extension.cursorLeft",
     "onCommand:extension.cursorRight",
-    "onCommand:extension.cursorUp",
+    "onCommand:extension.cursorLeft",
     "onCommand:extension.cursorDown",
-    "onCommand:extension.cursorWordStartLeft",
-    "onCommand:extension.cursorWordEndRight",
-    "onCommand:extension.cursorTop",
-    "onCommand:extension.cursorBottom",
-    "onCommand:extension.yankFromBuf",
-    "onCommand:extension.prefixZap",
-    "onCommand:extension.saveClose",
+    "onCommand:extension.cursorUp",
+    "onCommand:extension.cursorWordNext",
+    "onCommand:extension.cursorWordStart",
+    "onCommand:extension.cursorLineEnd",
+    "onCommand:extension.cursorLineStart",
+    "onCommand:extension.cursorDocEnd",
+    "onCommand:extension.cursorPageStart",
+    "onCommand:extension.cursorPageEnd",
+    "onCommand:extension.cursorDocStart",
     "onCommand:workbench.action.splitEditorDown",
     "onCommand:workbench.action.focusNextGroup",
     "onCommand:workbench.action.focusPreviousGroup",
@@ -51,195 +47,91 @@
   ],
   "contributes": {
     "commands": [
-      {
-        "command": "extension.deleteLeftToBuf",
-        "title": "Left delete to buffer"
-      },
-      {
-        "command": "extension.deleteRightToBuf",
-        "title": "Forward delete to buffer"
-      },
-      {
-        "command": "extension.deleteLineToBuf",
-        "title": "Line delete to buffer"
-      },
-      {
-        "command": "extension.yankFromBuf",
-        "title": "Buffer yank"
-      },
-      {
-        "command": "extension.cursorLineStartPrev",
-        "title": "End of line or next line"
-      },
-      {
-        "command": "extension.cursorLineEndNext",
-        "title": "Beginning of line or previous line"
-      },
-      {
-        "command": "extension.prefixZap",
-        "title": "Delete to next cursor motion target"
-      },
-      {
-        "command": "extension.saveClose",
-        "title": "Save file and close window"
-      }
+      {"command": "extension.cursorRight",	"title": "Move to next character"},
+      {"command": "extension.cursorLeft",	"title": "Move to previous character"},
+      {"command": "extension.cursorDown",	"title": "Move down one line"},
+      {"command": "extension.cursorUp",		"title": "Move up one line"},
+      {"command": "extension.cursorWordNext",	"title": "Move to end of word"},
+      {"command": "extension.cursorWordStart",	"title": "Move to start of word"},
+      {"command": "extension.cursorLineEnd",	"title": "Move to end of line or next line"},
+      {"command": "extension.cursorLineStart",	"title": "Move to beginning of line or previous line"},
+      {"command": "extension.cursorPageEnd",	"title": "Move to end of page"},
+      {"command": "extension.cursorPageStart",	"title": "Move to start of page"},
+      {"command": "extension.cursorDocEnd",	"title": "Move to end of document"},
+      {"command": "extension.cursorDocStart",	"title": "Move to start of document"},
+
+      {"command": "extension.zapRight",		"title": "Zap next character"},
+      {"command": "extension.zapLeft",		"title": "Zap previous character"},
+      {"command": "extension.zapDown",		"title": "Zap to down one line"},
+      {"command": "extension.zapUp",		"title": "Zap to up one line"},
+      {"command": "extension.zapWordNext",	"title": "Zap to end of word"},
+      {"command": "extension.zapWordStart",	"title": "Zap to start of word"},
+      {"command": "extension.zapLineEnd",	"title": "Zap to end of line or next line"},
+      {"command": "extension.zapLineStart",	"title": "Zap to beginning of line or previous line"},
+      {"command": "extension.zapPageEnd",	"title": "Zap to end of page or next page"},
+      {"command": "extension.zapPageStart",	"title": "Zap to beginning of page or previous page"},
+      {"command": "extension.zapDocEnd",	"title": "Zap to end of document"},
+      {"command": "extension.zapDocStart",	"title": "Zap to start of document"},
+      
+      {"command": "extension.zapLine",	"title": "Zap current line"},
+      {"command": "extension.yank","title": "Paste from zap buffer"},
+
+      {"command": "extension.center","title": "Center window on current line"},
+      {"command": "extension.saveClose","title": "Save file and close window"}
     ],
     "keybindings": [
-      {
-        "key": "ctrl+h",
-        "when": "textInputFocus",
-        "command": "extension.deleteLeftToBuf"
-      },
-      {
-        "key": "ctrl+g",
-        "when": "textInputFocus",
-        "command": "extension.deleteRightToBuf"
-      },
-      {
-        "key": "ctrl+e",
-        "when": "textInputFocus",
-        "command": "extension.deleteLineToBuf"
-      },
-      {
-        "key": "ctrl+u",
-        "when": "textInputFocus",
-        "command": "extension.cursorLineStartPrev"
-      },
-      {
-        "key": "ctrl+r",
-        "when": "textInputFocus",
-        "command": "extension.cursorLineEndNext"
-      },
-      {
-        "key": "ctrl+f",
-        "when": "textInputFocus",
-        "command": "extension.cursorRight"
-      },
-      {
-        "key": "ctrl+j",
-        "when": "textInputFocus",
-        "command": "extension.cursorLeft"
-      },
-      {
-        "key": "ctrl+k",
-        "when": "textInputFocus",
-        "command": "extension.cursorUp"
-      },
-      {
-        "key": "ctrl+d",
-        "when": "textInputFocus",
-        "command": "extension.cursorDown"
-      },
-      {
-        "key": "ctrl+n",
-        "when": "textInputFocus",
-        "command": "extension.cursorWordStartLeft"
-      },
-      {
-        "key": "ctrl+v",
-        "when": "textInputFocus",
-        "command": "extension.cursorWordEndRight"
-      },
-      {
-        "key": "ctrl+w",
-        "when": "textInputFocus",
-        "command": "extension.cursorBottom"
-      },
-      {
-        "key": "ctrl+o",
-        "when": "textInputFocus",
-        "command": "extension.cursorTop"
-      },
-      {
-        "key": "ctrl+y",
-        "when": "textInputFocus",
-        "command": "scrollPageUp"
-      },
-      {
-        "key": "ctrl+t",
-        "when": "textInputFocus",
-        "command": "scrollPageDown"
-      },
-      {
-        "key": "ctrl+b",
-        "when": "textInputFocus",
-        "command": "extension.yankFromBuf"
-      },
-      {
-        "key": "ctrl+l",
-        "when": "textInputFocus",
-        "command": "extension.prefixZap"
-      },
-      {
-        "key": "ctrl+i",
-        "when": "textInputFocus",
-        "command": "tab"
-      },
-      {
-        "key": "ctrl+p ctrl+l",
-        "when": "textInputFocus",
-        "command": "workbench.action.splitEditorDown"
-      },
-      {
-        "key": "ctrl+p ctrl+y",
-        "when": "textInputFocus",
-        "command": "workbench.action.focusPreviousGroup"
-      },
-      {
-        "key": "ctrl+p ctrl+t",
-        "when": "textInputFocus",
-        "command": "workbench.action.focusNextGroup"
-      },
-      {
-        "key": "ctrl+p ctrl+s",
-        "when": "textInputFocus",
-        "command": "workbench.action.files.save"
-      },
-      {
-        "key": "ctrl+p ctrl+a",
-        "when": "textInputFocus",
-        "command": "workbench.action.files.saveAs"
-      },
-      {
-        "key": "ctrl+p ctrl+o",
-        "when": "textInputFocus",
-        "command": "workbench.action.files.openFile"
-      },
-      {
-        "key": "ctrl+p ctrl+w",
-        "when": "textInputFocus",
-        "command": "workbench.action.closeActiveEditor"
-      },
-      {
-        "key": "ctrl+p ctrl+u",
-        "when": "textInputFocus",
-        "command": "extension.saveClose"
-      },
-      {
-        "key": "ctrl+p ctrl+g",
-        "when": "textInputFocus",
-        "command": "workbench.action.gotoLine"
-      },
-      {
-        "key": "ctrl+p ctrl+x",
-        "when": "textInputFocus && !findWidgetVisible",
-        "command": "actions.find"
-      },
-      {
-        "key": "ctrl+p ctrl+x",
-        "when": "findWidgetVisible",
-        "command": "closeFindWidget"
-      },
-      {
-        "key": "ctrl+x",
-        "when": "editorFocus && findWidgetVisible",
-        "command": "closeFindWidget"
-      },
-      {
-        "key": "ctrl+x",
-        "when": "editorFocus",
-        "command": "editor.action.nextMatchFindAction"
-      }
+      {"key": "ctrl+f",		"when": "textInputFocus",	"command": "extension.cursorRight"},
+      {"key": "ctrl+j",		"when": "textInputFocus",	"command": "extension.cursorLeft"},
+      {"key": "ctrl+d",		"when": "textInputFocus",	"command": "extension.cursorDown"},
+      {"key": "ctrl+k",		"when": "textInputFocus",	"command": "extension.cursorUp"},
+      {"key": "ctrl+v",		"when": "textInputFocus",	"command": "extension.cursorWordEnd"},
+      {"key": "ctrl+n",		"when": "textInputFocus",	"command": "extension.cursorWordStart"},
+      {"key": "ctrl+r",		"when": "textInputFocus",	"command": "extension.cursorLineEnd"},
+      {"key": "ctrl+u",		"when": "textInputFocus",	"command": "extension.cursorLineStart"},
+      {"key": "ctrl+t",		"when": "textInputFocus",	"command": "extension.cursorPageEnd"},
+      {"key": "ctrl+y",		"when": "textInputFocus",	"command": "extension.cursorPageStart"},
+      {"key": "ctrl+w",		"when": "textInputFocus",	"command": "extension.cursorDocEnd"},
+      {"key": "ctrl+o",		"when": "textInputFocus",	"command": "extension.cursorDocStart"},
+
+      {"key": "ctrl+l ctrl+f",	"when": "textInputFocus",	"command": "extension.zapRight"},
+      {"key": "ctrl+l ctrl+j",	"when": "textInputFocus",	"command": "extension.zapLeft"},
+      {"key": "ctrl+l ctrl+d",	"when": "textInputFocus",	"command": "extension.zapDown"},
+      {"key": "ctrl+l ctrl+k",	"when": "textInputFocus",	"command": "extension.zapUp"},
+      {"key": "ctrl+l ctrl+v",	"when": "textInputFocus",	"command": "extension.zapWordEnd"},
+      {"key": "ctrl+l ctrl+n",	"when": "textInputFocus",	"command": "extension.zapWordStart"},
+      {"key": "ctrl+l ctrl+r",	"when": "textInputFocus",	"command": "extension.zapLineEnd"},
+      {"key": "ctrl+l ctrl+u",	"when": "textInputFocus",	"command": "extension.zapLineStart"},
+      {"key": "ctrl+l ctrl+t",	"when": "textInputFocus",	"command": "extension.zapPageEnd"},
+      {"key": "ctrl+l ctrl+y",	"when": "textInputFocus",	"command": "extension.zapPageStart"},
+      {"key": "ctrl+l ctrl+w",	"when": "textInputFocus",	"command": "extension.zapDocEnd"},
+      {"key": "ctrl+l ctrl+o",	"when": "textInputFocus",	"command": "extension.zapDocStart"},
+
+      {"key": "ctrl+g",		"when": "textInputFocus",	"command": "extension.zapRight"},
+      {"key": "ctrl+h",		"when": "textInputFocus",	"command": "extension.zapLeft"},
+      {"key": "ctrl+e",		"when": "textInputFocus",	"command": "extension.zapLine"},
+
+      {"key": "ctrl+b",		"when": "textInputFocus",	"command": "extension.yank"},
+
+      {"key": "ctrl+i",		"when": "textInputFocus",	"command": "tab"},
+      {"key": "ctrl+p ctrl+b",	"when": "textInputFocus",	"command": "undo"},
+      {"key": "ctrl+l ctrl+b",	"when": "textInputFocus",	"command": "redo"},
+      {"key": "ctrl+enter",	"when": "textInputFocus",	"command": "type", "args": {"text":"\n"}},
+
+      {"key": "ctrl+p ctrl+c",	"when": "editorTextFocus",	"command": "extension.center"},
+      {"key": "ctrl+p ctrl+l",	"when": "textInputFocus",	"command": "workbench.action.splitEditorDown"},
+      {"key": "ctrl+p ctrl+y",	"when": "textInputFocus",	"command": "workbench.action.focusPreviousGroup"},
+      {"key": "ctrl+p ctrl+t",	"when": "textInputFocus",	"command": "workbench.action.focusNextGroup"},
+      {"key": "ctrl+p ctrl+p",	"when": "textInputFocus",	"command": "workbench.action.files.save"},
+      {"key": "ctrl+p ctrl+s",	"when": "textInputFocus",	"command": "workbench.action.files.save"},
+      {"key": "ctrl+p ctrl+a",	"when": "textInputFocus",	"command": "workbench.action.files.saveAs"},
+      {"key": "ctrl+p ctrl+o",	"when": "textInputFocus",	"command": "workbench.action.files.openFile"},
+      {"key": "ctrl+p ctrl+w",	"when": "textInputFocus",	"command": "workbench.action.closeActiveEditor"},
+      {"key": "ctrl+p ctrl+u",	"when": "textInputFocus",	"command": "extension.saveClose"},
+      {"key": "ctrl+p ctrl+g",	"when": "textInputFocus",	"command": "workbench.action.gotoLine"},
+      {"key": "ctrl+p ctrl+x",	"when": "textInputFocus && !findWidgetVisible",		"command": "actions.find"},
+      {"key": "ctrl+p ctrl+x",	"when": "findWidgetVisible",				"command": "closeFindWidget"},
+      {"key": "ctrl+x",		"when": "editorFocus && findWidgetVisible",		"command": "closeFindWidget"},
+      {"key": "ctrl+x",		"when": "editorFocus",					"command": "editor.action.nextMatchFindAction"}
     ],
     "configuration": {
       "properties": {

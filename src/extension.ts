@@ -1,111 +1,76 @@
 import * as vscode from 'vscode';
 
 const zapTimeout = 1000			//ignore start of zap after this many msec
-let zapActive = false			//true when zap prefix key has been entered
-let zapStart: vscode.Position | null = null
 let yankBuffer = ''
 let preClear = true			//true: clear before next zap to buffer
 let previousCursorPosition: vscode.Position | null = null;
 
 export function activate(context: vscode.ExtensionContext) {	//console.log('activate vsk')
   context.subscriptions.push(
-    vscode.commands.registerCommand('extension.deleteLeftToBuf', deleteLeftToBuf),
-    vscode.commands.registerCommand('extension.deleteRightToBuf', deleteRightToBuf),
-    vscode.commands.registerCommand('extension.deleteLineToBuf', deleteLineToBuf),
-    vscode.commands.registerCommand('extension.cursorLineStartPrev', cursorLineStartPrev),
-    vscode.commands.registerCommand('extension.cursorLineEndNext', cursorLineEndNext),
-    vscode.commands.registerCommand('extension.cursorLeft', () => cursorMoveWithZap('cursorLeft')),
-    vscode.commands.registerCommand('extension.cursorRight', () => cursorMoveWithZap('cursorRight')),
-    vscode.commands.registerCommand('extension.cursorUp', () => cursorMoveWithZap('cursorUp')),
-    vscode.commands.registerCommand('extension.cursorDown', () => cursorMoveWithZap('cursorDown')),
-    vscode.commands.registerCommand('extension.cursorWordStartLeft', () => cursorMoveWithZap('cursorWordStartLeft')),
-    vscode.commands.registerCommand('extension.cursorWordEndRight', () => cursorMoveWithZap('cursorWordEndRight')),
-    vscode.commands.registerCommand('extension.cursorTop', () => cursorMoveWithZap('cursorTop')),
-    vscode.commands.registerCommand('extension.cursorBottom', () => cursorMoveWithZap('cursorBottom')),
-    vscode.commands.registerCommand('extension.yankFromBuf', yankFromBuf),
-    vscode.commands.registerCommand('extension.prefixZap', prefixZap),
-    vscode.commands.registerCommand('extension.saveClose', saveClose)
+    vscode.commands.registerCommand('extension.cursorRight', () => moveSequence('cursorRight')),
+    vscode.commands.registerCommand('extension.cursorLeft', () => moveSequence('cursorLeft')),
+    vscode.commands.registerCommand('extension.cursorDown', () => moveSequence('cursorDown')),
+    vscode.commands.registerCommand('extension.cursorUp', () => moveSequence('cursorUp')),
+    vscode.commands.registerCommand('extension.cursorWordEnd', () => moveSequence('cursorWordEndRight')),
+    vscode.commands.registerCommand('extension.cursorWordStart', () => moveSequence('cursorWordStartLeft')),
+    vscode.commands.registerCommand('extension.cursorLineEnd', () => moveSequence(['cursorRight','cursorLineEnd'])),
+    vscode.commands.registerCommand('extension.cursorLineStart', () => moveSequence(['cursorLeft','cursorLineStart'])),
+    vscode.commands.registerCommand('extension.cursorPageEnd', () => moveSequence(()=>page())),
+    vscode.commands.registerCommand('extension.cursorPageStart', () => moveSequence(()=>page(true))),
+    vscode.commands.registerCommand('extension.cursorDocStart', () => moveSequence('cursorTop')),
+    vscode.commands.registerCommand('extension.cursorDocEnd', () => moveSequence('cursorBottom')),
+
+    vscode.commands.registerCommand('extension.zapRight', () => zapSequence('cursorRight')),
+    vscode.commands.registerCommand('extension.zapLeft', () => zapSequence('cursorLeft')),
+    vscode.commands.registerCommand('extension.zapDown', () => zapSequence('cursorDown')),
+    vscode.commands.registerCommand('extension.zapUp', () => zapSequence('cursorUp')),
+    vscode.commands.registerCommand('extension.zapWordEnd', () => zapSequence('cursorWordEndRight')),
+    vscode.commands.registerCommand('extension.zapWordStart', () => zapSequence('cursorWordStartLeft')),
+    vscode.commands.registerCommand('extension.zapLineEnd', () => zapSequence(['cursorRight','cursorLineEnd'])),
+    vscode.commands.registerCommand('extension.zapLineStart', () => zapSequence(['cursorLeft','cursorLineStart'])),
+    vscode.commands.registerCommand('extension.zapPageEnd', () => zapSequence(()=>page())),
+    vscode.commands.registerCommand('extension.zapPageStart', () => zapSequence(()=>page(true))),
+    vscode.commands.registerCommand('extension.zapDocEnd', () => zapSequence('cursorBottom')),
+    vscode.commands.registerCommand('extension.zapDocStart', () => zapSequence('cursorTop')),
+
+    vscode.commands.registerCommand('extension.zapLine', async () => {
+      await zapSequence('cursorLineEnd')
+      await zapSequence('cursorLineStart')
+      await zapSequence('cursorRight')
+    }),
+    vscode.commands.registerCommand('extension.yank', yank),
+    vscode.commands.registerCommand('extension.center', center),
+    vscode.commands.registerCommand('extension.saveClose', () => rawSequence(['workbench.action.files.save','workbench.action.closeActiveEditor']))
   );
-
-  vscode.window.onDidChangeTextEditorSelection((e) => {		console.log('mot/sel')
-    const editor = e.textEditor
-    const currentCursorPosition = editor.selection.active
-
-    if (!preClear && !zapActive &&
-    	previousCursorPosition && !previousCursorPosition.isEqual(currentCursorPosition)) {
-      preClear = true;			;console.log("preClear = true")
-    }
-    previousCursorPosition = currentCursorPosition;
-  })
 }
 
-function preCheck() {
-  if (preClear) yankBuffer = ''
-  preClear = false
-}
-
-function deleteLeftToBuf() {
-  const editor = vscode.window.activeTextEditor
-  if (!editor) return			//;console.log('deleteLeftToBuf')
-
-  preCheck()
-  editor.edit(editBuilder => {
-    let range = new vscode.Range(editor.selection.start.translate(0, -1), editor.selection.start)
-    let text = editor.document.getText(range)
-    editBuilder.delete(range)
-    yankBuffer = text + yankBuffer
-  })
-}
-
-function deleteRightToBuf() {
+function yank() {
   const editor = vscode.window.activeTextEditor;
-  if (!editor) return			//;console.log('deleteRightToBuf')
+  if (!editor) return		//;console.log('yankFromBuf', editor)
 
-  preCheck()
+  const position = editor.selection.start;
   editor.edit(editBuilder => {
-    let range = new vscode.Range(editor.selection.start, editor.selection.start.translate(0, 1))
-    let text = editor.document.getText(range)
-    editBuilder.delete(range)
-    yankBuffer += text
+    editBuilder.insert(editor.selection.start, yankBuffer)
+  }).then(() => {
+    editor.selection = new vscode.Selection(position, position)
   })
 }
 
-function deleteLineToBuf() {
-  const editor = vscode.window.activeTextEditor
-  if (!editor) return			;console.log('deleteLineToBuf')
-
-  preCheck()
-  editor.edit(editBuilder => {
-    const line = editor.selection.active.line;
-    const lineRange = new vscode.Range(
-      editor.document.lineAt(line).range.start,
-      line < editor.document.lineCount - 1 
-          ? editor.document.lineAt(line + 1).range.start 
-          : editor.document.lineAt(line).range.end
-    );
-    const text = editor.document.getText(lineRange);
-    editBuilder.delete(lineRange);
-    yankBuffer += text;
-  })
+async function moveSequence(moves: any) {
+  await rawSequence(moves)
+  preClear = true			//;console.log("preClear = true")
 }
 
-function prefixZap() {
+async function zapSequence(moves: any) {
   const editor = vscode.window.activeTextEditor
-  if (!editor) return		//;console.log("prefixZap:")
+  if (!editor) return					//;console.log("Zap:")
+  const zapStart = editor.selection.active		//;console.log('zapStart:', zapStart)
 
-  zapActive = true
-  zapStart = editor.selection.active
+  await rawSequence(moves)
 
-  setTimeout(() => {zapActive = false}, zapTimeout)
-}
-
-function zapCheck() {
-  const editor = vscode.window.activeTextEditor		//;console.log('zapCheck')
-  if (!editor || !zapActive || !zapStart) return
-  const zapEnd = editor.selection.active
-
+  const zapEnd = editor.selection.active		//;console.log('zapEnd:', zapEnd)
   let range: vscode.Range
-  let prepend: boolean = false;
+  let prepend: boolean = false
   
   if (zapStart.isBefore(zapEnd)) {
     range = new vscode.Range(zapStart, zapEnd)
@@ -116,65 +81,88 @@ function zapCheck() {
 
   const text = editor.document.getText(range)
 
-  preCheck()
+  if (preClear) yankBuffer = ''
+  preClear = false			//;console.log("preClear = false")
+
   editor.edit(editBuilder => {
     editBuilder.delete(range)
   }).then(() => {
     yankBuffer = prepend ? text + yankBuffer : yankBuffer + text
-    zapActive = false
-    zapStart = null
   })
 }
 
-function yankFromBuf() {
+async function rawSequence(moves: any) {
+  if (!vscode?.window?.activeTextEditor) return
+  const movesArray = (Array.isArray(moves)) ? moves : [moves]
+
+  for (const move of movesArray) {		//console.log('raw m:', typeof move, move)
+    if (typeof move === 'function') 
+      await move()
+    else if (typeof move === 'string') 
+      await vscode.commands.executeCommand(move)
+  }
+}
+
+function page(back = false) {
   const editor = vscode.window.activeTextEditor;
-  if (!editor) return		//;console.log('yankFromBuf', editor)
+  if (!editor) return;
 
-  editor.edit(editBuilder => {
-    editBuilder.insert(editor.selection.start, yankBuffer)
-  })
+  const eofLine = editor.document.lineCount - 1;
+  const curLine = editor.selection.active.line;
+  const curColumn = editor.selection.active.character;
+  const visibleRange = editor.visibleRanges[0];
+  const firstLine = visibleRange.start.line;
+  const lastLine = visibleRange.end.line;	
+  const lines = lastLine - firstLine;
+  let gotoLine, newFirstLine = 0, newLastLine = 0;
+  let doReveal = false;
+
+  if (back) {
+    if (curLine > firstLine) {
+      gotoLine = firstLine
+    } else {
+      gotoLine = firstLine - lines
+      if (gotoLine < 0) gotoLine = 0
+      newFirstLine = gotoLine
+      newLastLine = gotoLine + lines
+      if (newLastLine > eofLine) newLastLine = eofLine
+      doReveal = true
+    }
+  } else {
+    if (curLine < lastLine) {
+      gotoLine = lastLine
+    } else {
+      gotoLine = lastLine + lines
+      if (gotoLine > eofLine) gotoLine = eofLine
+      newLastLine = gotoLine
+      newFirstLine = gotoLine - lines
+      if (newFirstLine < 0) newFirstLine = 0
+      doReveal = true
+    }
+  }			;console.log('page:', firstLine, '-', lastLine, gotoLine)
+
+  const newPosition = new vscode.Position(gotoLine, curColumn)
+  const newSelection = new vscode.Selection(newPosition, newPosition);
+
+  editor.selection = newSelection;
+  if (doReveal) {
+    const firstPos = new vscode.Position(newFirstLine, curColumn)
+    const lastPos = new vscode.Position(newLastLine, curColumn)
+    const newRange = new vscode.Range(firstPos, lastPos)
+    editor.revealRange(newRange, 0);		;console.log('reveal:', newFirstLine, newLastLine, gotoLine)
+  }
 }
 
-function cursorLineStartPrev() {
-  const editor = vscode.window.activeTextEditor
-  if (!editor) return
+function center() {
+  const editor = vscode.window.activeTextEditor;
+  if (!editor) return;
 
-  vscode.commands.executeCommand('cursorLeft').then(() => {
-    vscode.commands.executeCommand('cursorLineStart').then(() => {
-      zapCheck()
-    })
-  })
-}
+  const line = editor.selection.active.line;
 
-function cursorLineEndNext() {
-  const editor = vscode.window.activeTextEditor
-  if (!editor) return
-
-  vscode.commands.executeCommand('cursorRight').then(() => {
-    vscode.commands.executeCommand('cursorLineEnd').then(() => {
-      zapCheck()
-    })
-  })
-}
-
-function cursorMoveWithZap(move: string) {
-  const editor = vscode.window.activeTextEditor
-  if (!editor) return
-
-  vscode.commands.executeCommand(move).then(() => {
-    zapCheck()
-  })
-}
-
-function saveClose() {
-  const editor = vscode.window.activeTextEditor
-  if (!editor) return
-
-  vscode.commands.executeCommand('workbench.action.files.save').then(() => {
-    vscode.commands.executeCommand('workbench.action.closeWindow').then(() => {
-      zapCheck()
-    })
-  })
+  vscode.commands.executeCommand('revealLine', {
+    lineNumber: line,
+    at: 'center'
+  });
 }
 
 export function deactivate() {}
