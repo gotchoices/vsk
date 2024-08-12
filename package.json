@@ -2,7 +2,7 @@
   "name": "vsk",
   "displayName": "vsk",
   "description": "VSCode K Commands",
-  "version": "0.2.0",
+  "version": "0.2.4",
   "author": "Kyle Bateman",
   "license": "MIT",
   "engines": {
@@ -126,12 +126,24 @@
       {"key": "ctrl+p ctrl+a",	"when": "textInputFocus",	"command": "workbench.action.files.saveAs"},
       {"key": "ctrl+p ctrl+o",	"when": "textInputFocus",	"command": "workbench.action.files.openFile"},
       {"key": "ctrl+p ctrl+w",	"when": "textInputFocus",	"command": "workbench.action.closeActiveEditor"},
-      {"key": "ctrl+p ctrl+u",	"when": "textInputFocus",	"command": "extension.saveClose"},
+
+      {"key": "ctrl+p ctrl+d",	"when": "textInputFocus",	"command": "workbench.action.increaseViewSize"},
+      {"key": "ctrl+p ctrl+k",	"when": "textInputFocus",	"command": "workbench.action.decreaseViewSize"},
+      {"key": "ctrl+p ctrl+f",	"when": "textInputFocus",	"command": "workbench.action.nextEditor"},
+      {"key": "ctrl+p ctrl+j",	"when": "textInputFocus",	"command": "workbench.action.previousEditor"},
+
+      {"key": "ctrl+p ctrl+e",	"when": "textInputFocus",	"command": "extension.saveClose"},
       {"key": "ctrl+p ctrl+g",	"when": "textInputFocus",	"command": "workbench.action.gotoLine"},
-      {"key": "ctrl+p ctrl+x",	"when": "textInputFocus && !findWidgetVisible",		"command": "actions.find"},
-      {"key": "ctrl+p ctrl+x",	"when": "findWidgetVisible",				"command": "closeFindWidget"},
-      {"key": "ctrl+x",		"when": "editorFocus && findWidgetVisible",		"command": "closeFindWidget"},
-      {"key": "ctrl+x",		"when": "editorFocus",					"command": "editor.action.nextMatchFindAction"}
+      
+      {"key": "ctrl+p ctrl+x",	"when": "editorFocus",		"command": "actions.find"},
+      {"key": "ctrl+enter",	"when": "findWidgetVisible",	"command": "workbench.action.focusActiveEditorGroup"},
+      {"key": "ctrl+r",		"when": "findWidgetVisible",	"command": "editor.action.startFindReplaceAction"},
+      {"key": "ctrl+l ctrl+x",	"when": "editorFocus",		"command": "editor.action.startFindReplaceAction"},
+      
+      {"key": "ctrl+x",		"when": "editorFocus",		"command": "editor.action.nextMatchFindAction"},
+      {"key": "ctrl+shift+.",	"when": "editorFocus",		"command": "editor.action.previousMatchFindAction"},
+      {"key": "ctrl+.",		"when": "editorFocus",		"command": "editor.action.previousMatchFindAction"},
+      {"key": "ctrl+P ctrl+.",	"when": "findWidgetVisible",	"command": "closeFindWidget"}
     ],
     "configuration": {
       "properties": {
