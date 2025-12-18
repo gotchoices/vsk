@@ -116,7 +116,8 @@ function page(back = false) {
   const lines = lastLine - firstLine;
   let gotoLine, newFirstLine = 0, newLastLine = 0;
   let doReveal = false;
-
+  ; console.log('first:', firstLine, 'last:', lastLine);
+  
   if (back) {
     if (curLine > firstLine) {
       gotoLine = firstLine
